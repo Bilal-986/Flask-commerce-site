@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}
+	Home - Flask-O-shop
+{% endblock %}
+
+{% block content %}
+	{% with msgs =  get_flashed_messages(with_categories=True) %}
+	{% for c, msg in msgs %}
+		{% if c == 'error' %}
+			<div class="flash-error">
+		{% else %}
+			<div class="success">
+		{% endif %}
+			{{ msg | safe}}</div><br>
+	{% endfor %}
+	{% endwith %}
+
+	<!-- Hero Section -->
+	<div class="hero-section text-center mb-5">
+		<h1 class="display-4 mb-3">Welcome to Flask-O-shop</h1>
+		<p class="lead">Discover amazing products at unbeatable prices</p>
+		<div class="hero-stats mt-4">
+			<div class="row justify-content-center">
+				<div class="col-md-3 col-6 mb-3">
+					<div class="stat-card">
+						<h3>{{ items|length }}</h3>
+						<p>Products</p>
+					</div>
+				</div>
+				<div class="col-md-3 col-6 mb-3">
+					<div class="stat-card">
+						<h3>24/7</h3>
+						<p>Support</p>
+					</div>
+				</div>
+				<div class="col-md-3 col-6 mb-3">
+					<div class="stat-card">
+						<h3>Free</h3>
+						<p>Shipping</p>
+					</div>
+				</div>
+				<div class="col-md-3 col-6 mb-3">
+					<div class="stat-card">
+						<h3>100%</h3>
+						<p>Secure</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{% if search %}
+	<div class="search-results mb-4">
+		<h2><i class="fa fa-search"></i> Search results for "{{ query }}"</h2>
+		<p class="text-muted">{{ items|length }} item(s) found</p>
+	</div>
+	{% else %}
+	<!-- New Arrivals Section -->
+	<div class="section-header mb-4">
+		<h2><i class="fa fa-star"></i> New Arrivals</h2>
+		<p class="text-muted">Fresh products just added to our collection</p>
+	</div>
+	{% endif %}
+
+	<div class="items">
+	{% for item in items[::-1] %}
+	<a href="{{ url_for('item', id=item.id) }}" class="item-link">
+		<div class="item">
+			<div class="item-wrapper">
+				<div class="img-wrapper">
+					<img src="{{ item.image }}" class="pic" alt="{{ item.name }}">
+					<div class="item-overlay">
+						<i class="fa fa-eye"></i>
+					</div>
+				</div>
+				<h4>{{ item.name }}</h4>
+				<div class="item-category">{{ item.category }}</div>
+				<div class="item-rating">
+					<i class="fa fa-star checked"></i>
+					<i class="fa fa-star checked"></i>
+					<i class="fa fa-star checked"></i>
+					<i class="fa fa-star checked"></i>
+					<i class="fa fa-star checked"></i>
+					<span class="rating-count">({{ range(1, 51) | random }})</span>
+				</div>
+				<div class="item-price">
+					<span class="price">${{ item.price }}</span>
+					<span class="price-label">USD</span>
+				</div>
+			</div>
+		</div>
+	</a>
+	{% endfor %}
+	</div>
+
+	{% if not search %}
+	<!-- Most Popular Section -->
+	<div class="section-header mb-4 mt-5">
+		<h2><i class="fa fa-fire"></i> Most Popular</h2>
+		<p class="text-muted">Our best-selling products</p>
+	</div>
+
+	<div class="items">
+	{% for item in items %}
+	<a href="{{ url_for('item', id=item.id) }}" class="item-link">
+		<div class="item">
+			<div class="item-wrapper">
+				<div class="img-wrapper">
+					<img src="{{ item.image }}" class="pic" alt="{{ item.name }}">
+					<div class="item-overlay">
+						<i class="fa fa-eye"></i>
+					</div>
+				</div>
+				<h4>{{ item.name }}</h4>
+				<div class="item-category">{{ item.category }}</div>
+				<div class="item-rating">
+					<i class="fa fa-star checked"></i>
+					<i class="fa fa-star checked"></i>
+					<i class="fa fa-star checked"></i>
+					<i class="fa fa-star checked"></i>
+					<i class="fa fa-star checked"></i>
+					<span class="rating-count">({{ range(1, 51) | random }})</span>
+				</div>
+				<div class="item-price">
+					<span class="price">${{ item.price }}</span>
+					<span class="price-label">USD</span>
+				</div>
+			</div>
+		</div>
+	</a>
+	{% endfor %}
+	</div>
+	{% endif %}
+
+	{% if not items %}
+	<div class="empty-state text-center">
+		<i class="fa fa-search fa-3x mb-3"></i>
+		<h3>No items found</h3>
+		<p class="text-muted">Try adjusting your search or browse our collection</p>
+		<a href="{{ url_for('home') }}" class="btn btn-primary">Discover Products</a>
+	</div>
+	{% endif %}
+{% endblock %}
